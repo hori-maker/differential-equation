@@ -26,7 +26,6 @@ st.sidebar.header("🎮 パラメータ設定")
 
 # -------------------------------------------------------
 # 各モデルの定義
-# 戻り値: (df, 解説文, 数式(LaTeX), Y軸範囲)
 # -------------------------------------------------------
 
 # === 🐰 生物分野 ===
@@ -239,7 +238,6 @@ def run_love():
 def run_three_body():
     st.sidebar.info("再生ボタン(▶)で動きます")
     
-    # ★スライダーを個別に復活させました！★
     st.sidebar.subheader("3つの星の質量")
     m1 = st.sidebar.slider("青い星 (m1)", 1.0, 20.0, 10.0)
     m2 = st.sidebar.slider("赤い星 (m2)", 1.0, 20.0, 10.0)
@@ -256,7 +254,6 @@ def run_three_body():
         a3 = G*m1*(r1-r3)/r13**3 + G*m2*(r2-r3)/r23**3
         return np.concatenate([v1, a1, v2, a2, v3, a3])
 
-    # 引数に質量を渡す
     y = odeint(model, state0, t, args=(m1, m2, m3))
     
     data = []
@@ -266,11 +263,19 @@ def run_three_body():
         data.append({"Time": t[i], "Body": "星3 (緑)", "x": y[i,8], "y": y[i,9], "Size": m3})
     df_anim = pd.DataFrame(data)
     
+    # ここで色を強制指定します
+    color_map = {
+        "星1 (青)": "blue",
+        "星2 (赤)": "red",
+        "星3 (緑)": "green"
+    }
+
     fig = px.scatter(
         df_anim, x="x", y="y", animation_frame="Time", animation_group="Body", 
-        color="Body", size="Size", range_x=[-2, 2], range_y=[-2, 2]
+        color="Body", size="Size", range_x=[-2, 2], range_y=[-2, 2],
+        color_discrete_map=color_map # <--- これを追加しました！
     )
-    # 軌跡を描画
+    
     fig.add_trace(go.Scatter(x=y[:,0], y=y[:,1], mode='lines', line=dict(color='blue', width=1), opacity=0.3, showlegend=False))
     fig.add_trace(go.Scatter(x=y[:,4], y=y[:,5], mode='lines', line=dict(color='red', width=1), opacity=0.3, showlegend=False))
     fig.add_trace(go.Scatter(x=y[:,8], y=y[:,9], mode='lines', line=dict(color='green', width=1), opacity=0.3, showlegend=False))
@@ -324,7 +329,6 @@ elif "カオス" in field:
 
 # === 画面描画 ===
 
-# 1. グラフ
 if fig_anim:
     st.plotly_chart(fig_anim, use_container_width=True)
 elif df is not None:
@@ -334,7 +338,6 @@ elif df is not None:
     fig.update_layout(height=450)
     st.plotly_chart(fig, use_container_width=True)
 
-# 2. 数式と解説
 st.markdown("---")
 cols = st.columns([1, 1])
 
