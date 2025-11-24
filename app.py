@@ -54,7 +54,6 @@ def run_lotka_volterra():
     \frac{dy}{dt} = \delta xy - \gamma y
     \end{cases}
     """
-    # ここに 'r' を追加しました
     desc = r"""
     **ロトカ・ヴォルテラの方程式**
     *   $x$: 被食者（ウサギ）、$y$: 捕食者（キツネ）
@@ -73,8 +72,6 @@ def run_logistic():
     df = pd.DataFrame({'Time': t, '個体数 (N)': y})
     
     latex = r"\frac{dN}{dt} = rN \left(1 - \frac{N}{K}\right)"
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **ロジスティック方程式**
     *   人口爆発を防ぐ有名な式です。
@@ -102,8 +99,6 @@ def run_sir():
     \frac{dR}{dt} = \gamma I
     \end{cases}
     """
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **SIRモデル (Kermack–McKendrick theory)**
     *   SとIが出会う確率($S \times I$)に比例して感染が進みます。
@@ -133,8 +128,6 @@ def run_drug():
     \frac{dB}{dt} = k_a G - k_e B
     \end{cases}
     """
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **薬物動態 (1-コンパートメントモデル)**
     *   $G$: 胃に残っている薬、$B$: 血液中の薬
@@ -158,8 +151,6 @@ def run_bass():
     df = pd.DataFrame({'Time': t, '累計売上 (N)': y, '売上の勢い (dN/dt)': speed})
     
     latex = r"\frac{dN}{dt} = \left( p + \frac{q}{M}N \right) (M - N)"
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **バス拡散モデル (Bass Diffusion Model)**
     *   $N$: すでに買った人の数、$M$: 全体の市場規模
@@ -183,8 +174,6 @@ def run_spring():
     df['Time'] = t
     
     latex = r"m \frac{d^2 x}{dt^2} = -c \frac{dx}{dt} - kx"
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **減衰振動 (Damped Harmonic Oscillator)**
     *   運動方程式 $F=ma$ そのものです。
@@ -194,17 +183,16 @@ def run_spring():
     return df, desc, latex, [-6, 6]
 
 def run_cooling():
+    # ★ここを修正しました（スライダー復活）★
     k = st.sidebar.slider("冷却定数 (k)", 0.01, 0.20, 0.05)
-    T_env = 20
-    T_init = 90
+    T_env = st.sidebar.slider("室温 (T_env)", 0, 40, 20)
+    T_init = st.sidebar.slider("初期温度 (T0)", 50, 100, 90)
     
     t = np.linspace(0, 100, 100)
     y_analytic = T_env + (T_init - T_env) * np.exp(-k * t)
     df = pd.DataFrame({'Time': t, '温度 (T)': y_analytic})
     
     latex = r"\frac{dT}{dt} = -k (T - T_{env})"
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **ニュートンの冷却法則**
     *   温度の変化スピード $dT/dt$ は、「周りとの温度差」に比例します。
@@ -236,8 +224,6 @@ def run_love():
     \frac{dJ}{dt} = b R
     \end{cases}
     """
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **恋愛の力学系 (Strogatz Model)**
     *   $dR/dt$: ロミオの気持ちの変化率は、ジュリエットの気持ち($J$)に比例する。
@@ -278,7 +264,6 @@ def run_three_body():
         data.append({"Time": t[i], "Body": "星3 (緑)", "x": y[i,8], "y": y[i,9], "Size": m3})
     df_anim = pd.DataFrame(data)
     
-    # 色を強制指定
     color_map = {
         "星1 (青)": "blue",
         "星2 (赤)": "red",
@@ -298,8 +283,6 @@ def run_three_body():
     fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 20
     
     latex = r"\vec{a}_i = \sum_{j \neq i} G m_j \frac{\vec{r}_j - \vec{r}_i}{|\vec{r}_j - \vec{r}_i|^3}"
-    
-    # ここに 'r' を追加しました
     desc = r"""
     **三体問題 (The Three-Body Problem)**
     *   ニュートンの万有引力の法則です。
